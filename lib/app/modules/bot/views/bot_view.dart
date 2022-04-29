@@ -79,6 +79,42 @@ Widget _buildBotBody(BotController controller) {
             Visibility(
               visible: controller.chatBoxVisibility.value,
               child: _buildBuildTypeBox(controller),
+            ),
+            Visibility(
+              visible: controller.optionWidgetVisibility.value,
+              child: Wrap(
+                children: [
+                  ...controller.optionsList.asMap().entries.map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 4),
+                          child: GestureDetector(
+                            onTap: () => controller.checkAnswer(e.value),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white.withOpacity(0.1),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: _width * 0.04,
+                                    vertical: _width * 0.04),
+                                child: Text(
+                                  e.value,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0.2,
+                                      height: 1.3,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                ],
+              ),
             )
           ],
         ),
@@ -99,7 +135,7 @@ Widget _buildBuildTypeBox(BotController controller) {
       ),
       Expanded(
         child: Container(
-          height: _height * 0.065,
+          height: _height * 0.07,
           decoration: BoxDecoration(
             color: Color(0xff121F33),
             borderRadius: BorderRadius.circular(30),
@@ -111,10 +147,10 @@ Widget _buildBuildTypeBox(BotController controller) {
               style: TextStyle(fontSize: 16, color: Colors.white),
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: 'Type here',
+                hintText: 'Type here...',
+                contentPadding: EdgeInsets.only(top: _width * 0.02),
                 hintStyle: TextStyle(
-                  color: Colors.white.withOpacity(0.5),
-                ),
+                    color: Colors.white.withOpacity(0.1), fontSize: 16),
               ),
             ),
           ),
@@ -124,7 +160,7 @@ Widget _buildBuildTypeBox(BotController controller) {
         width: _width * 0.02,
       ),
       GestureDetector(
-        onTap: () => controller.sendName(_nameController.text),
+        onTap: () => controller.getUserName(_nameController.text),
         child: CircleAvatar(
           radius: 23,
           child: Icon(Icons.send),

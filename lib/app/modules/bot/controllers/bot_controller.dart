@@ -1,78 +1,170 @@
 import 'dart:async';
-import 'dart:ffi';
+
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:q_bot/app/data/data.dart';
 import 'package:q_bot/app/modules/bot/models/bot_models.dart';
-
-import '../widgets/message.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class BotController extends GetxController with WidgetsBindingObserver {
   ScrollController scrollController = ScrollController();
 
-  final _chatDelay = Duration(milliseconds: 1500);
+  final _questionIndex = 0;
 
-  final _chatList = [].obs;
+  var _score = 0;
 
-  final humanTalk = true.obs;
+  final _chatDelay = Duration(milliseconds: 1000);
 
   var typing = false.obs;
-
   final chatBoxVisibility = true.obs;
+  final optionWidgetVisibility = false.obs;
+
+  final _chatList = [].obs;
+  final _optionsList = [].obs;
+
+  final candidateName = ''.obs;
+
+  var random = Random();
+
+  var _correctMessages = [
+    'Correct answer',
+    'Doing well',
+    'Congragulations',
+    'hoo good',
+    'Oh my god you are good',
+    'oh my god its also correct',
+    'very good',
+    'wonderful',
+    'awsome',
+    'dedicated',
+  ];
+
+  List<String> get optionsList {
+    return [..._optionsList];
+  }
 
   List<Chat> get chatList {
     return [..._chatList];
   }
 
-  void startChat() async {
+  Future<void> addBotMessage(String message) async {
+    typing.value = true;
     Timer(_chatDelay, () {
-      typing.value = true;
-      _chatList.add(Chat(
-        id: 0,
-        message: Data.humanTalk[0],
-        dateTime: DateTime.now(),
-        chatType: ChatType.bot,
-      ));
-    });
-    Timer(_chatDelay + Duration(seconds: 2), () {
-      _chatList.add(Chat(
-        id: 0,
-        message: Data.humanTalk[1],
-        dateTime: DateTime.now(),
-        chatType: ChatType.bot,
-      ));
-    });
-    Timer(_chatDelay + Duration(milliseconds: 3000), () {
-      typing.value = false;
-    });
-  }
-
-  void sendName(String name) {
-    _chatList.add(
-      Chat(
-          id: 1,
-          message: name,
-          dateTime: DateTime.now(),
-          chatType: ChatType.user),
-    );
-
-    Timer(_chatDelay, () {
-      typing.value = true;
       _chatList.add(
         Chat(
           id: 0,
-          message: 'Okay $name, Let\'s start this quiz ',
+          message: message,
           dateTime: DateTime.now(),
           chatType: ChatType.bot,
         ),
       );
-    });
-    Timer(_chatDelay + Duration(milliseconds: 500), () {
-      typing.value = false;
-      chatBoxVisibility.value = false;
+      FlutterRingtonePlayer.play(fromAsset: "assets/sound/incoming.mp3");
+      scrollController.animateTo(_chatList.length * 400,
+          duration: _chatDelay, curve: Curves.ease);
+      Future.delayed(Duration(seconds: 2))
+          .then((value) => typing.value = false);
     });
   }
+
+  Future<void> addSysMessage(String message) async {
+    typing.value = true;
+    Timer(_chatDelay, () {
+      _chatList.add(
+        Chat(
+          id: 3,
+          message: message,
+          dateTime: DateTime.now(),
+          chatType: ChatType.sys,
+        ),
+      );
+      scrollController.animateTo(_chatList.length * 400,
+          duration: _chatDelay, curve: Curves.ease);
+    });
+  }
+
+  Future<void> addUserMessage(String message) async {
+    Timer(Duration.zero, () {
+      _chatList.add(
+        Chat(
+          id: 0,
+          message: message,
+          dateTime: DateTime.now(),
+          chatType: ChatType.user,
+        ),
+      );
+      scrollController.animateTo(_chatList.length * 400,
+          duration: _chatDelay, curve: Curves.ease);
+      Future.delayed(Duration(microseconds: 500))
+          .then((value) => typing.value = true);
+    });
+    FlutterRingtonePlayer.play(fromAsset: "assets/sound/send_message.mp3");
+  }
+
+  Future<void> startQuiz() async {
+    _optionsList.clear();
+    if (Data.generalKnowledge.isNotEmpty) {
+      Data.generalKnowledge.shuffle();
+
+      Future.delayed(_chatDelay + Duration(seconds: 1)).then((value) =>
+          addBotMessage(Data.generalKnowledge[0]['question'] as String));
+      Future.delayed(_chatDelay + Duration(seconds: 2)).then((value) =>
+          _optionsList
+              .addAll(Data.generalKnowledge[0]['options'] as List<String>));
+      Future.delayed(_chatDelay).then((_) {
+        optionWidgetVisibility.value = true;
+      });
+    } else {
+      addSysMessage('$candidateName Well played! Your score is $_score');
+    }
+  }
+
+  Future<void> checkAnswer(String ans) async {
+    await addUserMessage(ans);
+    if (Data.generalKnowledge[0]['answer'] == ans) {
+      _score = _score + 10;
+      addBotMessage(_correctMessages[random.nextInt(7)]);
+      Data.generalKnowledge.removeAt(0);
+      startQuiz();
+    } else {
+      addBotMessage('Oops! the answer was incorrect.');
+      addBotMessage(
+          'The correct answer is ${Data.generalKnowledge[0]['answer']}');
+      Data.generalKnowledge.removeAt(0);
+      startQuiz();
+    }
+  }
+
+  Future<void> getUserName(String name) async {
+    candidateName.value = name;
+    await addUserMessage(name).then((_) {
+      addBotMessage(
+        'Okay $name, Welcome to the world of knowledge. You can practice amazing quiz chats here.',
+      );
+    }).then(
+      (_) {
+        Future.delayed(Duration(seconds: 1)).then((_) {
+          addBotMessage('So take your first question').then((_) {
+            typing.value = false;
+            chatBoxVisibility.value = false;
+
+            startQuiz();
+          });
+        });
+      },
+    );
+  }
+
+  void beginsChat() async {
+    await addBotMessage('Hello').then(
+      (_) => addBotMessage('Your name please'),
+    );
+  }
+
+////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////
 
   Future<bool> get keyboardHidden async {
     final check =
@@ -84,10 +176,12 @@ class BotController extends GetxController with WidgetsBindingObserver {
   @override
   void onInit() {
     super.onInit();
+
     WidgetsBinding.instance?.addObserver(this);
-    if (humanTalk.value) {
-      Timer(Duration(milliseconds: 500), () => startChat());
-    }
+    beginsChat();
+    // if (humanTalk.value) {
+    //   Timer(Duration(milliseconds: 500), () => startChat());
+    // }
   }
 
   @override

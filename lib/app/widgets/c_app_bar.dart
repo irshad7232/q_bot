@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/instance_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,6 +33,7 @@ class CappBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     SizedBox(width: _width * 0.02),
                     CircleAvatar(
+                      child: SvgPicture.asset('assets/svg/bot.svg'),
                       radius: 20,
                       backgroundColor: Colors.white,
                     ),
@@ -42,7 +44,7 @@ class CappBar extends StatelessWidget implements PreferredSizeWidget {
                         SizedBox(
                           width: _width * 0.5,
                           child: Text(
-                            'Generel Knowledge',
+                            'Bot',
                             style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
