@@ -16,7 +16,7 @@ class BotView extends GetView<BotController> {
     return Obx(
       () => Scaffold(
           resizeToAvoidBottomInset: true,
-          backgroundColor: Color(0xff030C1A),
+          // backgroundColor: Color(0xff030C1A),
           appBar: CappBar(
             typing: controller.typing.value,
           ),
@@ -38,12 +38,12 @@ Widget _buildBotBody(BotController controller) {
             Container(
               width: _width * 1,
               height: _height * 1,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage('assets/img/bg2.jpg'),
-                ),
-              ),
+              // decoration: BoxDecoration(
+              //   image: DecorationImage(
+              //     fit: BoxFit.fill,
+              //     image: AssetImage('assets/img/bg2.jpg'),
+              //   ),
+              // ),
             ),
           ],
         ),
@@ -52,13 +52,16 @@ Widget _buildBotBody(BotController controller) {
             Expanded(
               child: ScrollConfiguration(
                 behavior: NoGlowScrollBehaviour(),
-                child: ListView.builder(
-                  controller: controller.scrollController,
-                  shrinkWrap: true,
-                  itemBuilder: (ctx, index) {
-                    return Message(chat: controller.chatList[index]);
-                  },
-                  itemCount: controller.chatList.length,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: ListView.builder(
+                    controller: controller.scrollController,
+                    shrinkWrap: true,
+                    itemBuilder: (ctx, index) {
+                      return Message(chat: controller.chatList[index]);
+                    },
+                    itemCount: controller.chatList.length,
+                  ),
                 ),
               ),
             ),
@@ -93,7 +96,7 @@ Widget _buildBotBody(BotController controller) {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
-                                color: Colors.white.withOpacity(0.1),
+                                color: Color(0xffE8EBFF),
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -106,7 +109,7 @@ Widget _buildBotBody(BotController controller) {
                                       fontWeight: FontWeight.w500,
                                       letterSpacing: 0.2,
                                       height: 1.3,
-                                      color: Colors.white),
+                                      color: Color(0xff7E7E7E)),
                                 ),
                               ),
                             ),
@@ -127,48 +130,53 @@ Widget _buildBuildTypeBox(BotController controller) {
   final _width = Get.width;
   final _height = Get.height;
   final _nameController = TextEditingController();
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      SizedBox(
-        width: _width * 0.01,
-      ),
-      Expanded(
-        child: Container(
-          height: _height * 0.07,
-          decoration: BoxDecoration(
-            color: Color(0xff121F33),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-            child: TextField(
-              controller: _nameController,
-              style: TextStyle(fontSize: 16, color: Colors.white),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Type here...',
-                contentPadding: EdgeInsets.only(top: _width * 0.02),
-                hintStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.1), fontSize: 16),
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: _width * 0.01,
+        ),
+        Expanded(
+          child: Container(
+            height: _height * 0.07,
+            decoration: BoxDecoration(
+              border: Border.all(
+                  width: 1, color: Color(0xff4E4E4E).withOpacity(0.5)),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+              child: TextField(
+                controller: _nameController,
+                style: TextStyle(
+                    fontSize: 16, color: Colors.black.withOpacity(0.5)),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Type here...',
+                  contentPadding: EdgeInsets.only(top: _width * 0.02),
+                  hintStyle: TextStyle(
+                      color: Colors.black.withOpacity(0.3), fontSize: 16),
+                ),
               ),
             ),
           ),
         ),
-      ),
-      SizedBox(
-        width: _width * 0.02,
-      ),
-      GestureDetector(
-        onTap: () => controller.getUserName(_nameController.text),
-        child: CircleAvatar(
-          radius: 23,
-          child: Icon(Icons.send),
+        SizedBox(
+          width: _width * 0.02,
         ),
-      ),
-      SizedBox(
-        width: _width * 0.01,
-      ),
-    ],
+        GestureDetector(
+          onTap: () => controller.getUserName(_nameController.text),
+          child: CircleAvatar(
+            radius: 23,
+            child: Icon(Icons.send),
+          ),
+        ),
+        SizedBox(
+          width: _width * 0.01,
+        ),
+      ],
+    ),
   );
 }

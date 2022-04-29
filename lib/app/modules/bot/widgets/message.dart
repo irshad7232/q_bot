@@ -50,7 +50,7 @@ class Message extends StatelessWidget {
                                   BoxConstraints(maxWidth: _width * 0.7),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color(0xff121F33),
+                                  color: Color(0xffE9E5FF),
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(20),
                                     topRight: Radius.circular(20),
@@ -68,7 +68,7 @@ class Message extends StatelessWidget {
                                         fontWeight: FontWeight.w500,
                                         letterSpacing: 0.2,
                                         height: 1.3,
-                                        color: Colors.white),
+                                        color: Color(0xff343C7E)),
                                   ),
                                 ),
                               ),
@@ -89,7 +89,7 @@ class Message extends StatelessWidget {
                                       BoxConstraints(maxWidth: _width * 0.7),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Color(0xff1D74F5),
+                                      color: Color(0xffE9E5FF),
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(20),
                                         topRight: Radius.circular(20),
@@ -108,7 +108,7 @@ class Message extends StatelessWidget {
                                             fontWeight: FontWeight.w500,
                                             letterSpacing: 0.2,
                                             height: 1.3,
-                                            color: Colors.white),
+                                            color: Color(0xff343C7E)),
                                       ),
                                     ),
                                   ),
@@ -136,22 +136,22 @@ class Message extends StatelessWidget {
                                       BoxConstraints(maxWidth: _width * 0.7),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.1),
+                                      color: Color(0xffE8EBFF),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: _width * 0.04,
+                                          horizontal: _width * 0.06,
                                           vertical: _width * 0.02),
                                       child: Text(
                                         chat.message,
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.w500,
                                             letterSpacing: 0.2,
                                             height: 1.3,
-                                            color: Colors.white),
+                                            color: Color(0xff7E7E7E)),
                                       ),
                                     ),
                                   ),

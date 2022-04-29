@@ -19,7 +19,7 @@ class CappBar extends StatelessWidget implements PreferredSizeWidget {
           child: Container(
             width: _width,
             height: _height * 0.085,
-            color: Color(0xff121F33),
+            color: Color(0xff187BCD),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -33,7 +33,7 @@ class CappBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     SizedBox(width: _width * 0.02),
                     CircleAvatar(
-                      child: SvgPicture.asset('assets/svg/bot.svg'),
+                      child: Image.asset('assets/img/bot.png'),
                       radius: 20,
                       backgroundColor: Colors.white,
                     ),
@@ -76,5 +76,5 @@ class CappBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(Get.height * 0.085);
+  Size get preferredSize => Size.fromHeight(Get.height * 0.075);
 }
